@@ -1,5 +1,5 @@
 /* Deutsch-Entdecker service worker: makes the app work offline */
-const CACHE = "deutsch-entdecker-v1";
+const CACHE = "deutsch-entdecker-v4";
 const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-512-maskable.png"];
 
 self.addEventListener("install", e => {

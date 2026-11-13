@@ -122,8 +122,10 @@ small{font-weight:400; display:block}
 .pagecard.turn{animation:turn .35s ease-out}
 @keyframes turn{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
 .stext{font-size:clamp(1.55rem,5.4vw,2.3rem); line-height:1.6; text-align:center; padding:14px 8px 4px}
+.nb{white-space:nowrap}
 .w{display:inline-block; padding:0 .1em; border-radius:12px; cursor:pointer}
 .w.on{background:var(--sun); color:#2B2150}
+.stext.long{font-size:clamp(1.3rem,4.6vw,1.9rem); line-height:1.5}
 .sen{text-align:center; color:var(--muted); font-size:1rem; padding:0 10px}
 .wordbar{min-height:2.3em; text-align:center; font-size:1.15rem; padding-top:6px; color:var(--ink)}
 .wordbar b{color:var(--violet)}
@@ -291,6 +293,15 @@ const RAW = [
  ["Sonne","die","sun","☀️","natur"],["Mond","der","moon","🌙","natur"],["Stern","der","star","⭐","natur"],["Wolke","die","cloud","☁️","natur"],
  ["Regen","der","rain","🌧️","natur"],["Regenbogen","der","rainbow","🌈","natur"],["Baum","der","tree","🌳","natur"],["Blume","die","flower","🌸","natur"],
  ["Schnee","der","snow","❄️","natur"],["Feuer","das","fire","🔥","natur"],["Berg","der","mountain","⛰️","natur"],["Meer","das","sea","🌊","natur"],["Blatt","das","leaf","🍃","natur"],
+ // Reise
+ ["Koffer","der","suitcase","🧳","reise"],["Bahnhof","der","station","🚉","reise"],["Flugzeug","das","airplane","✈️","reise"],["Schiff","das","ship","🚢","reise"],
+ ["Strand","der","beach","🏖️","reise"],["Zelt","das","tent","⛺","reise"],["Hotel","das","hotel","🏨","reise"],["Boot","das","boat","⛵","reise"],
+ ["Brücke","die","bridge","🌉","reise"],["Straße","die","street","🛣️","reise"],["Tasche","die","bag","👜","reise"],["Karte","die","map","🗺️","reise"],
+ // mehr Wörter für die neuen Geschichten
+ ["Fuchs","der","fox","🦊","tiere"],["Elefant","der","elephant","🐘","tiere"],["Wal","der","whale","🐋","tiere"],["Krabbe","die","crab","🦀","tiere"],
+ ["Pilz","der","mushroom","🍄","natur"],["Muschel","die","shell","🐚","natur"],["Insel","die","island","🏝️","natur"],["Wald","der","forest","🌲","natur"],
+ ["Himmel","der","sky","🌌","natur"],["Nacht","die","night","🌃","natur"],
+ ["Teddy","der","teddy bear","🧸","zuhause"],["Freund","der","friend","🤝","familie"],
  // Farben
  ["rot","","red","🔴","farben"],["blau","","blue","🔵","farben"],["grün","","green","🟢","farben"],["gelb","","yellow","🟡","farben"],
  ["orange","","orange","🟠","farben"],["schwarz","","black","⚫","farben"],["weiß","","white","⚪","farben"],["braun","","brown","🟤","farben"],["lila","","purple","🟣","farben"],
@@ -301,7 +312,7 @@ const RAW = [
 const WORDS = RAW.map(([de,art,en,e,cat])=>({de,art,en,e,cat}));
 const byDe = d => WORDS.find(w=>w.de===d);
 const CATS = [
- ["tiere","Tiere","Animals","🐾"],["essen","Essen","Food","🍎"],["zuhause","Zuhause","Home","🏠"],["familie","Familie","Family","👨‍👩‍👧"],
+ ["reise","Reise","Travel","🧳"],["tiere","Tiere","Animals","🐾"],["essen","Essen","Food","🍎"],["zuhause","Zuhause","Home","🏠"],["familie","Familie","Family","👨‍👩‍👧"],
  ["koerper","Körper","Body","🖐️"],["natur","Natur","Nature","🌈"],["farben","Farben","Colours","🎨"],["zahlen","Zahlen","Numbers","🔢"]
 ];
 let cat = "alle";
@@ -324,7 +335,12 @@ const SK = {
   day:  ["#8ED6FF","#E8F8FF","#7AD36B"],
   night:["#1B1F5C","#5A4A9E","#2F6B4F"],
   rain: ["#8D9DB8","#C9D3E0","#5E9E6B"],
-  warm: ["#FFD9A0","#FFF1D6","#D9A66B"]
+  warm: ["#FFD9A0","#FFF1D6","#D9A66B"],
+  beach:["#8ED6FF","#FFF3D6","#F2D49B"],
+  sunset:["#FF9A5C","#FFD9A0","#2F6B4F"],
+  lake: ["#8ED6FF","#E8F8FF","#4FA8E8"],
+  snow: ["#BFD7F5","#F5FAFF","#FFFFFF"],
+  nightsea:["#1B1F5C","#5A4A9E","#2A5FA8"]
 };
 // item: [emoji, x% from left, y% from bottom, size (in % of scene width), animation]
 const sc = (th,items) => ({th,items});
@@ -337,6 +353,10 @@ const DICT = {das:"this / that",ist:"is",ein:"a",eine:"a",bär:"bear",hat:"has",
  grau:"grey",schaut:"looks",aus:"out of",dem:"the",fenster:"window",traurig:"sad",regen:"rain",weg:"gone",am:"on / in the",himmel:"sky",wow:"wow",rot:"red",
  gelb:"yellow",grün:"green",und:"and",blau:"blue",bunt:"colourful",lacht:"laughs",tag:"day",jetzt:"now",mit:"with",ist:"is",wasser:"water",
  regenbogen:"rainbow"};
+Object.assign(DICT,{morgen:"tomorrow",fährt:"travels / drives",urlaub:"holiday",packt:"packs",koffer:"suitcase",zuerst:"first",kommen:"come",schuhe:"shoes",dann:"then",buch:"book",hut:"hat",strand:"beach",auch:"also",teddy:"teddy",freund:"friend",voll:"full",gut:"well / good",los:"off",zug:"train",oma:"grandma",bahnhof:"station",wartet:"waits",steigt:"gets on",tuut:"toot",tack:"clack",räder:"wheels",sieht:"sees",kuh:"cow",pferd:"horse",schwein:"pig",winkt:"waves",hält:"stops",steht:"stands",rennt:"runs",willkommen:"welcome",familie:"family",auto:"car",bald:"soon",noch:"yet",nicht:"not",zählt:"counts",autos:"cars",eins:"one",zwei:"two",drei:"three",vier:"four",gibt:"gives",isst:"eats",apfel:"apple",berg:"mountain",groß:"big",alle:"all / everyone",wir:"we",flugzeug:"airplane",fliegt:"flies",schnell:"fast",viele:"many",über:"above",häuser:"houses",klein:"small",ganz:"very",hurra:"hooray",landet:"lands",meer:"sea",baut:"builds",burg:"castle",sand:"sand",welle:"wave",platsch:"splash",kalt:"cold",findet:"finds",muschel:"shell",krabbe:"crab",läuft:"runs",kauft:"buys",eis:"ice cream",mmm:"yum",unter:"under",geht:"goes",wandern:"hike",opa:"grandpa",lang:"long",wiese:"meadow",glocke:"bell",bimmel:"ding-a-ling",fuchs:"fox",oben:"at the top",ruft:"calls",essen:"eat",brot:"bread",käse:"cheese",aussicht:"view",toll:"great",allein:"alone",mond:"moon",rund:"round",bist:"are",mein:"my",dein:"your",leuchten:"shine",zusammen:"together",schlaf:"sleep",wald:"forest",picknick:"picnic",tiere:"animals",bringt:"brings",karotten:"carrots",igel:"hedgehog",äpfel:"apples",maus:"mouse",decke:"blanket",lustig:"fun",lachen:"laugh",bis:"until / see you",ende:"end",
+entchen:"little ducks",schwimmen:"swim",see:"lake",köpfchen:"little head",schwänzchen:"little tail",höh:"up high",täubchen:"little doves",gurren:"coo",dach:"roof",lüfte:"air",nach:"after",hänschen:"little Hans",ging:"went",welt:"world",weite:"wide",hinein:"into",stock:"stick",wohlgemut:"cheerful",weinet:"cries",sehr:"very much",mehr:"any more",wünsch:"wish",glück:"luck",blick:"look",kehr:"come",wieder:"again",heim:"home",zurück:"back",backe:"bake",kuchen:"cake",bäcker:"baker",gerufen:"called",wer:"who",guten:"good",backen:"to bake",muss:"must",sieben:"seven",sachen:"things",eier:"eggs",schmalz:"lard",butter:"butter",salz:"salt",mehl:"flour",safran:"saffron",gehl:"yellow",schieb:"push",ofen:"oven",rein:"in",kuckuck:"cuckoo",lasset:"let",uns:"us",singen:"sing",tanzen:"dance",springen:"jump",frühling:"spring",wird:"becomes",nun:"now",summ:"buzz",bienchen:"little bee",herum:"around",ei:"oh",tun:"do",dir:"you",nichts:"nothing",zuleide:"harm",flieg:"fly",nur:"just",aus:"out",heide:"heath",vögel:"birds",schon:"already",welch:"what a",musizieren:"making music",pfeifen:"whistling",zwitschern:"chirping",tirilieren:"warbling",einmarschieren:"march in",sang:"song",schalle:"sound",häschen:"little bunny",grube:"hole",saß:"sat",schlief:"slept",armes:"poor",krank:"ill",dass:"that",hüpfen:"hop",kannst:"can",hüpf:"hop",männlein:"little man",stumm:"silent",still:"quiet",lauter:"pure",purpur:"purple",mäntlein:"little coat",um:"around",mag:"may / can",sein:"be",purpurroten:"purple-red",mäntelein:"little coat",bruder:"brother",jakob:"Jacob",schläfst:"are sleeping",du:"you",hörst:"hear",glocken:"bells",ding:"ding",dang:"dang",dong:"dong",kindlein:"little child",vater:"father",hüt:"watches",schaf:"sheep",mutter:"mother",schüttelt:"shakes",bäumelein:"little tree",fällt:"falls",herab:"down",träumelein:"little dream",abend:"evening",rosen:"roses",bedacht:"covered",näglein:"little carnations",besteckt:"decorated",schlüpf:"slip",deck:"covers",früh:"early",wenn:"when",gott:"God",geweckt:"woken up",vogel:"bird",geflogen:"flown",setzt:"sets",sich:"itself",nieder:"down",fuß:"foot",zettel:"note",schnabel:"beak",gruß:"greeting",von:"from",der:"the"});
+Object.assign(DICT,{gehen:"go",zoo:"zoo",löwe:"lion",stark:"strong",brüllt:"roars",laut:"loud",affen:"monkeys",springen:"jump",elefant:"elephant",lange:"long",nase:"nose",tschüss:"bye",müde:"tired",an:"at",schlüssel:"key",zimmer:"room",springt:"jumps",aufs:"onto the",hopp:"hop",glitzert:"sparkles",abendessen:"dinner",pizza:"pizza",putzt:"brushes",zähne:"teeth",ball:"ball",heißt:"is called",spielen:"play",hallo:"hello",hoch:"high",oh:"oh",nein:"no",wind:"wind",weht:"blows",fällt:"falls",runter:"down",schneit:"snows",alles:"everything",weiß:"white",schneemann:"snowman",bekommt:"gets",seine:"his",kopf:"head",fertig:"finished",wal:"whale",lebt:"lives",schwimmt:"swims",singt:"sings",fische:"fish",hören:"hear",zu:"to",macht:"makes",spaß:"fun",dunkel:"dark",freunde:"friends",geburtstag:"birthday",backt:"bakes",malt:"paints",bild:"picture",herz:"heart",klingelt:"rings",pustet:"blows",kerzen:"candles",
+gans:"goose",gestohlen:"stolen",gib:"give",her:"here",sonst:"otherwise",jäger:"hunter",holen:"fetch",schießgewehr:"rifle",regnet:"rains",lauf:"course",genug:"enough",geregnet:"rained",hört:"stops",auf:"up / on",aufgegangen:"risen",goldnen:"golden",sternlein:"little stars",prangen:"shine",hell:"bright",klar:"clear",schwarz:"black",schweiget:"is silent",wiesen:"meadows",steiget:"rises",nebel:"fog",wunderbar:"wonderful",weißt:"know",wie:"how",viel:"many",blauen:"blue",himmelszelt:"vault of the sky",weithin:"far",welt:"world",polizei:"police",offizier:"officer",fünf:"five",sechs:"six",alte:"old",hex:"witch",sieben:"seven",acht:"eight",neun:"nine",zehn:"ten",schlafen:"sleep",gehn:"go",wandern:"hiking",müllers:"miller’s",lust:"joy",schlechter:"bad",müller:"miller",niemals:"never",fiel:"occurred (to)",pferdchen:"little horse",galopp:"gallop",steine:"stones",brich:"break",beine:"legs"});
 const STORIES = [
  { id:"bruno", title:"Bruno und der Honig", en:"Bruno and the honey",
    words:["Bär","Honig","Biene","Baum","Hase"],
@@ -401,8 +421,458 @@ const STORIES = [
    quiz:[
     {q:"Wie ist das Wetter am Anfang?",en:"What is the weather at the start?",choices:[["☀️","Sonne"],["🌧️","Regen"],["❄️","Schnee"]],ok:1},
     {q:"Was ist am Himmel?",en:"What is in the sky?",choices:[["🌙","Mond"],["🌈","Regenbogen"],["⭐","Stern"]],ok:1}
+   ]},
+ { id:"koffer", title:"Mia packt den Koffer", en:"Mia packs the suitcase",
+   words:["Koffer","Schuh","Buch","Hut","Teddy"],
+   pages:[
+   {de:"Morgen fährt Mia in den Urlaub. Sie packt den Koffer.",en:"Tomorrow Mia goes on holiday. She is packing the suitcase.",
+    scene:sc("warm",[["🧳",58,12,34,"bob"],["👧",24,10,26,"bob"],["🖼️",84,50,10]])},
+   {de:"Zuerst kommen die Schuhe in den Koffer. Dann das Buch.",en:"First the shoes go into the suitcase. Then the book.",
+    scene:sc("warm",[["🧳",62,10,32],["👟",30,40,12,"float"],["📖",44,56,12,"float"],["👧",16,10,22,"bob"]])},
+   {de:"Mia packt den Hut ein. Am Strand scheint die Sonne.",en:"Mia packs the hat. At the beach the sun shines.",
+    scene:sc("warm",[["🧳",64,10,30],["🎩",64,42,12,"float"],["👧",22,10,24,"bob"],["🏖️",86,60,12,"float"]])},
+   {de:"Auch der Teddy kommt mit. Er ist Mias Freund.",en:"The teddy comes too. He is Mia’s friend.",
+    scene:sc("warm",[["🧸",60,12,24,"bob"],["👧",30,10,26,"bob"],["❤️",46,56,9,"float"],["🧳",86,10,22]])},
+   {de:"Papa sagt: „Der Koffer ist voll!“ Mia lacht.",en:"Dad says: “The suitcase is full!” Mia laughs.",
+    scene:sc("warm",[["👨",26,10,28,"bob"],["🧳",56,10,32],["👧",84,10,22,"bob"],["💬",38,60,12,"float"]])},
+   {de:"Am Abend schläft Mia gut. Morgen geht es los! Gute Nacht!",en:"In the evening Mia sleeps well. Tomorrow we are off! Good night!",
+    scene:sc("night",[["🌙",82,66,14,"float"],["⭐",20,70,6,"twinkle"],["⭐",44,62,5,"twinkle"],["🛏️",50,10,40],["👧",50,34,12,"bob"],["💤",66,52,9,"float"]])}
+   ],
+   quiz:[
+    {q:"Wer kommt auch mit?",en:"Who comes along too?",choices:[["🧸","Teddy"],["🐶","Hund"],["🐱","Katze"]],ok:0},
+    {q:"Was packt Mia zuerst?",en:"What does Mia pack first?",choices:[["👟","Schuhe"],["🍎","Apfel"],["⚽","Ball"]],ok:0}
+   ]},
+ { id:"zug", title:"Mit dem Zug zu Oma", en:"By train to Grandma",
+   words:["Zug","Bahnhof","Oma","Kuh","Pferd"],
+   pages:[
+   {de:"Heute fährt Ben mit dem Zug. Er fährt zu Oma.",en:"Today Ben travels by train. He is going to Grandma’s.",
+    scene:sc("day",[["☀️",86,66,14,"float"],["🚆",50,14,36,"bob"],["👦",18,14,20,"bob"],["🌳",90,16,22,"sway"]])},
+   {de:"Am Bahnhof wartet Ben. Da kommt der Zug!",en:"Ben waits at the station. Here comes the train!",
+    scene:sc("day",[["🚉",30,14,34],["👦",12,14,20,"bob"],["🚆",76,14,34,"drift"],["☁️",22,70,14,"drift"]])},
+   {de:"Ben steigt ein. Er sitzt am Fenster.",en:"Ben gets on. He sits by the window.",
+    scene:sc("day",[["🚆",50,14,46,"bob"],["👦",50,40,12,"bob"],["☀️",86,66,12,"float"]])},
+   {de:"Tuut, tuut! Der Zug fährt los. Tack, tack, tack!",en:"Toot, toot! The train sets off. Clack, clack, clack!",
+    scene:sc("day",[["🚆",44,14,36,"bob"],["💨",70,24,14,"drift"],["☀️",86,66,14,"float"],["🌳",92,16,20,"sway"],["🎵",24,56,9,"float"]])},
+   {de:"Ben sieht eine Kuh, ein Pferd und ein Schwein.",en:"Ben sees a cow, a horse and a pig.",
+    scene:sc("day",[["🐮",22,12,20,"bob"],["🐴",50,12,20,"bob"],["🐷",78,12,18,"bob"],["🌻",36,6,8],["☀️",86,68,12,"float"]])},
+   {de:"Dann hält der Zug. Oma steht am Bahnhof. Sie winkt.",en:"Then the train stops. Grandma is standing at the station. She waves.",
+    scene:sc("day",[["🚉",30,14,30],["🚆",78,14,30],["👵",54,14,22,"bob"],["👋",62,48,9,"float"]])},
+   {de:"Ben rennt zu Oma. „Hallo, Oma!“ Oma lacht: „Willkommen!“",en:"Ben runs to Grandma. “Hello, Grandma!” Grandma laughs: “Welcome!”",
+    scene:sc("day",[["👦",30,14,22,"hop"],["👵",64,14,26,"bob"],["❤️",48,56,10,"float"],["🌸",10,6,8],["🌸",92,6,8]])}
+   ],
+   quiz:[
+    {q:"Wie fährt Ben zu Oma?",en:"How does Ben travel to Grandma?",choices:[["🚆","Zug"],["🚗","Auto"],["✈️","Flugzeug"]],ok:0},
+    {q:"Was sieht Ben?",en:"What does Ben see?",choices:[["🐮","Kuh"],["🦁","Löwe"],["🐘","Elefant"]],ok:0}
+   ]},
+ { id:"auto", title:"Sind wir bald da?", en:"Are we there yet?",
+   words:["Auto","Apfel","Berg","Papa","Mama"],
+   pages:[
+   {de:"Die Familie fährt im Auto. Das Auto ist blau.",en:"The family drives in the car. The car is blue.",
+    scene:sc("day",[["☀️",86,66,14,"float"],["🚗",50,14,36,"bob"],["🌳",12,16,22,"sway"],["🌳",90,16,22,"sway"]])},
+   {de:"Lena fragt: „Sind wir bald da?“ Papa sagt: „Noch nicht.“",en:"Lena asks: “Are we there yet?” Dad says: “Not yet.”",
+    scene:sc("day",[["🚗",50,14,34,"bob"],["💬",30,58,12,"float"],["❓",70,60,10,"float"]])},
+   {de:"Lena zählt die Autos. Eins, zwei, drei, vier!",en:"Lena counts the cars. One, two, three, four!",
+    scene:sc("day",[["🚗",18,14,16],["🚕",38,14,16],["🚙",58,14,16],["🚌",80,14,16],["🔢",50,58,12,"float"]])},
+   {de:"Mama gibt Lena einen Apfel. Lena isst den Apfel.",en:"Mum gives Lena an apple. Lena eats the apple.",
+    scene:sc("warm",[["👩",24,10,26,"bob"],["👧",70,10,24,"bob"],["🍎",47,40,12,"float"]])},
+   {de:"Da ist ein Berg. Der Berg ist groß!",en:"There is a mountain. The mountain is big!",
+    scene:sc("day",[["⛰️",56,12,50],["☁️",24,70,14,"drift"],["🚗",20,12,18,"bob"],["☀️",88,70,12,"float"]])},
+   {de:"Papa sagt: „Jetzt sind wir da!“ Alle sind froh.",en:"Dad says: “Now we are there!” Everyone is happy.",
+    scene:sc("day",[["🏨",70,12,34],["🚗",28,12,24,"bob"],["🎉",50,60,12,"float"],["❤️",84,62,8,"float"]])}
+   ],
+   quiz:[
+    {q:"Was zählt Lena?",en:"What does Lena count?",choices:[["🚗","Autos"],["🐶","Hunde"],["⭐","Sterne"]],ok:0},
+    {q:"Was isst Lena?",en:"What does Lena eat?",choices:[["🍌","Banane"],["🍎","Apfel"],["🍞","Brot"]],ok:1}
+   ]},
+ { id:"flug", title:"Tim fliegt!", en:"Tim is flying!",
+   words:["Flugzeug","Wolke","Sonne","Haus","Auto"],
+   pages:[
+   {de:"Heute fliegt Tim mit dem Flugzeug. Das Flugzeug ist groß.",en:"Today Tim is flying on an airplane. The airplane is big.",
+    scene:sc("day",[["✈️",50,34,44,"float"],["👦",20,14,20,"bob"],["☁️",22,70,14,"drift"]])},
+   {de:"Das Flugzeug ist schnell. Es fliegt in den Himmel!",en:"The airplane is fast. It flies into the sky!",
+    scene:sc("day",[["✈️",56,40,40,"float"],["💨",28,38,12,"drift"],["☁️",20,68,14,"drift"],["☁️",80,74,12,"drift"]])},
+   {de:"Tim schaut aus dem Fenster. Er sieht viele Wolken.",en:"Tim looks out of the window. He sees many clouds.",
+    scene:sc("day",[["☁️",22,50,22,"drift"],["☁️",60,40,26,"drift"],["☁️",84,60,20,"drift"],["👦",50,14,22,"bob"]])},
+   {de:"Über den Wolken scheint die Sonne. Es ist so schön!",en:"Above the clouds the sun is shining. It is so beautiful!",
+    scene:sc("day",[["☀️",50,60,24,"float"],["☁️",24,22,26,"drift"],["☁️",72,18,28,"drift"],["✈️",50,40,18,"float"]])},
+   {de:"Tim sieht Häuser und Autos. Sie sind ganz klein!",en:"Tim sees houses and cars. They are very small!",
+    scene:sc("day",[["🏠",24,10,12],["🏠",44,10,12],["🚗",62,10,9],["🌳",80,10,12],["👦",50,50,20,"bob"]])},
+   {de:"Das Flugzeug landet. Tim ist glücklich. Hurra!",en:"The airplane lands. Tim is happy. Hooray!",
+    scene:sc("day",[["✈️",40,14,34,"bob"],["👦",74,14,20,"hop"],["🎉",56,58,11,"float"],["☀️",86,68,12,"float"]])}
+   ],
+   quiz:[
+    {q:"Wie reist Tim?",en:"How does Tim travel?",choices:[["✈️","Flugzeug"],["🚌","Bus"],["🚲","Fahrrad"]],ok:0},
+    {q:"Was ist über den Wolken?",en:"What is above the clouds?",choices:[["☀️","Sonne"],["🌧️","Regen"],["❄️","Schnee"]],ok:0}
+   ]},
+ { id:"strand", title:"Lena am Meer", en:"Lena at the sea",
+   words:["Strand","Meer","Muschel","Krabbe","Eis"],
+   pages:[
+   {de:"Lena ist am Strand. Das Meer ist blau.",en:"Lena is at the beach. The sea is blue.",
+    scene:sc("beach",[["🌊",18,34,22,"drift"],["🌊",42,36,22,"drift"],["🌊",66,34,22,"drift"],["☀️",86,66,14,"float"],["👧",30,14,24,"bob"],["🏖️",82,14,24]])},
+   {de:"Lena baut eine Burg aus Sand.",en:"Lena builds a castle out of sand.",
+    scene:sc("beach",[["🏰",56,12,30],["👧",26,14,24,"bob"],["☀️",86,66,14,"float"],["🌊",86,30,24,"drift"]])},
+   {de:"Eine Welle kommt. Platsch! Das Wasser ist kalt.",en:"A wave comes. Splash! The water is cold.",
+    scene:sc("beach",[["🌊",20,30,26,"float"],["🌊",46,28,28,"float"],["🌊",74,30,26,"float"],["💦",30,56,12,"float"],["👧",66,14,22,"hop"]])},
+   {de:"Lena findet eine Muschel. Sie hört das Meer.",en:"Lena finds a shell. She hears the sea.",
+    scene:sc("beach",[["🐚",56,16,24,"bob"],["👧",28,14,26,"bob"],["🎶",64,56,9,"float"],["☀️",86,66,12,"float"]])},
+   {de:"Da kommt eine Krabbe. Die Krabbe läuft zur Burg.",en:"Here comes a crab. The crab runs to the castle.",
+    scene:sc("beach",[["🦀",34,10,16,"hop"],["🏰",72,12,28],["👧",12,14,18,"bob"]])},
+   {de:"Papa kauft ein Eis. Mmm, das ist lecker!",en:"Dad buys an ice cream. Mmm, that is tasty!",
+    scene:sc("beach",[["👨",28,14,26,"bob"],["🍦",56,40,16,"float"],["👧",76,14,22,"bob"],["☀️",86,66,12,"float"]])},
+   {de:"Die Sonne geht unter. Gute Nacht, Meer!",en:"The sun goes down. Good night, sea!",
+    scene:sc("sunset",[["🌅",50,38,50,"float"],["🌊",20,18,24,"drift"],["🌊",46,16,26,"drift"],["🌊",74,18,24,"drift"],["⭐",18,72,6,"twinkle"],["🌙",84,70,10,"float"]])}
+   ],
+   quiz:[
+    {q:"Was findet Lena?",en:"What does Lena find?",choices:[["🐚","Muschel"],["⚽","Ball"],["🍎","Apfel"]],ok:0},
+    {q:"Was kauft Papa?",en:"What does Dad buy?",choices:[["🍰","Kuchen"],["🍦","Eis"],["🥛","Milch"]],ok:1}
+   ]},
+ { id:"berg", title:"Wanderung in den Bergen", en:"A hike in the mountains",
+   words:["Berg","Opa","Kuh","Fuchs","Wasser"],
+   pages:[
+   {de:"Paul und Opa wandern in den Bergen.",en:"Paul and Grandpa hike in the mountains.",
+    scene:sc("day",[["⛰️",64,12,52],["👴",30,14,24,"bob"],["🧒",14,14,18,"bob"],["☀️",86,68,12,"float"]])},
+   {de:"Der Weg ist lang. Paul hat Durst. Er trinkt Wasser.",en:"The path is long. Paul is thirsty. He drinks water.",
+    scene:sc("day",[["🧒",40,14,26,"bob"],["💧",64,44,11,"float"],["🌲",88,14,26,"sway"],["🌲",10,14,22,"sway"]])},
+   {de:"Auf der Wiese steht eine Kuh. Sie hat eine Glocke. Bimmel!",en:"A cow stands in the meadow. She has a bell. Ding-a-ling!",
+    scene:sc("day",[["🐮",50,12,28,"bob"],["🔔",60,38,9,"float"],["🌼",20,6,8],["🌼",84,6,8],["⛰️",86,30,30]])},
+   {de:"Paul sieht einen Fuchs. Der Fuchs ist rot und schnell.",en:"Paul sees a fox. The fox is red and fast.",
+    scene:sc("day",[["🦊",66,12,22,"hop"],["🧒",24,14,24,"bob"],["🌲",90,14,24,"sway"]])},
+   {de:"Jetzt sind Paul und Opa oben. Paul ruft: „Ich bin oben!“",en:"Now Paul and Grandpa are at the top. Paul shouts: “I am at the top!”",
+    scene:sc("day",[["⛰️",50,6,64],["🧒",44,52,12,"hop"],["👴",58,52,12,"bob"],["☁️",20,72,14,"drift"],["☀️",88,70,12,"float"]])},
+   {de:"Sie essen Brot und Käse. Die Aussicht ist toll!",en:"They eat bread and cheese. The view is great!",
+    scene:sc("day",[["🍞",34,14,12,"float"],["🧀",50,14,12,"float"],["👴",70,14,22,"bob"],["🧒",20,14,18,"bob"],["🌄",50,50,30,"float"]])}
+   ],
+   quiz:[
+    {q:"Wer wandert mit Paul?",en:"Who hikes with Paul?",choices:[["👴","Opa"],["👵","Oma"],["👨","Papa"]],ok:0},
+    {q:"Was hat die Kuh?",en:"What does the cow have?",choices:[["🎩","Hut"],["🔔","Glocke"],["👟","Schuh"]],ok:1}
+   ]},
+ { id:"stern", title:"Der kleine Stern", en:"The little star",
+   words:["Stern","Mond","Himmel","Nacht","Freund"],
+   pages:[
+   {de:"Es ist Nacht. Am Himmel ist ein kleiner Stern.",en:"It is night. In the sky there is a little star.",
+    scene:sc("night",[["⭐",50,52,16,"twinkle"],["⭐",20,70,5,"twinkle"],["⭐",80,64,5,"twinkle"],["🌲",12,14,24,"sway"],["🌲",90,14,22,"sway"]])},
+   {de:"Der Stern ist allein. Er ist traurig.",en:"The star is alone. He is sad.",
+    scene:sc("night",[["⭐",50,50,18,"float"],["💧",56,36,5,"fall"],["🌲",14,14,24,"sway"]])},
+   {de:"Da kommt der Mond. Der Mond ist groß und rund.",en:"Then the moon comes. The moon is big and round.",
+    scene:sc("night",[["🌕",70,46,26,"float"],["⭐",30,56,10,"twinkle"],["🌲",12,14,22,"sway"],["🌲",90,14,24,"sway"]])},
+   {de:"Der Stern fragt: „Bist du mein Freund?“",en:"The star asks: “Are you my friend?”",
+    scene:sc("night",[["⭐",30,54,14,"float"],["🌕",72,46,24,"float"],["💬",50,66,10,"float"]])},
+   {de:"Der Mond lächelt und sagt: „Ja, ich bin dein Freund.“",en:"The moon smiles and says: “Yes, I am your friend.”",
+    scene:sc("night",[["🌕",64,48,26,"float"],["⭐",30,54,14,"float"],["❤️",48,70,8,"float"]])},
+   {de:"Jetzt leuchten Mond und Stern zusammen. Schlaf gut, kleiner Stern!",en:"Now the moon and the star shine together. Sleep well, little star!",
+    scene:sc("night",[["🌕",62,50,24,"float"],["⭐",34,52,16,"twinkle"],["✨",48,72,8,"twinkle"],["💤",80,30,9,"float"]])}
+   ],
+   quiz:[
+    {q:"Wer ist allein?",en:"Who is alone?",choices:[["⭐","Stern"],["🌙","Mond"],["☀️","Sonne"]],ok:0},
+    {q:"Wer sagt: „Ja“?",en:"Who says “Yes”?",choices:[["🌙","Mond"],["⭐","Stern"],["☀️","Sonne"]],ok:0}
+   ]},
+ { id:"picknick", title:"Das Picknick im Wald", en:"The picnic in the forest",
+   words:["Hase","Igel","Fuchs","Maus","Käse"],
+   pages:[
+   {de:"Im Wald ist ein Picknick. Alle Tiere kommen.",en:"There is a picnic in the forest. All the animals are coming.",
+    scene:sc("day",[["🌲",12,14,26,"sway"],["🌲",90,14,24,"sway"],["🐰",34,12,14,"hop"],["🦔",54,12,14,"bob"],["🦊",74,12,16,"bob"],["☀️",86,68,12,"float"]])},
+   {de:"Der Hase bringt Karotten. Der Igel bringt Äpfel.",en:"The rabbit brings carrots. The hedgehog brings apples.",
+    scene:sc("day",[["🐰",28,12,22,"hop"],["🥕",44,40,10,"float"],["🦔",68,12,20,"bob"],["🍎",84,40,10,"float"]])},
+   {de:"Die Maus bringt Käse. Der Fuchs bringt Brot.",en:"The mouse brings cheese. The fox brings bread.",
+    scene:sc("day",[["🐭",28,12,16,"bob"],["🧀",44,36,10,"float"],["🦊",68,12,22,"bob"],["🍞",84,40,10,"float"]])},
+   {de:"Alle sitzen auf einer Decke. Das ist lustig!",en:"Everyone sits on a blanket. That is fun!",
+    scene:sc("day",[["🐰",24,12,16,"bob"],["🦔",42,12,14,"bob"],["🐭",58,12,12,"bob"],["🦊",76,12,18,"bob"],["🎈",50,56,10,"float"]])},
+   {de:"Sie essen und lachen. Die Sonne scheint.",en:"They eat and laugh. The sun is shining.",
+    scene:sc("day",[["☀️",50,62,18,"float"],["🍎",30,10,9],["🥕",46,10,9],["🧀",62,10,9],["🍞",78,10,9],["🐰",20,12,14,"bob"],["🦊",88,12,14,"bob"]])},
+   {de:"Am Ende sagen alle: „Danke schön! Bis morgen!“",en:"At the end everyone says: “Thank you very much! See you tomorrow!”",
+    scene:sc("sunset",[["🌅",50,40,40,"float"],["🐰",24,12,16,"hop"],["🦔",42,12,14,"bob"],["🦊",70,12,18,"bob"],["🐭",86,12,12,"bob"],["💬",50,64,10,"float"]])}
+   ],
+   quiz:[
+    {q:"Wer bringt Karotten?",en:"Who brings carrots?",choices:[["🐰","Hase"],["🦔","Igel"],["🐭","Maus"]],ok:0},
+    {q:"Wer bringt Käse?",en:"Who brings cheese?",choices:[["🐭","Maus"],["🦊","Fuchs"],["🐻","Bär"]],ok:0}
+   ]},
+ { id:"zoo", title:"Im Zoo", en:"At the zoo",
+   words:["Löwe","Affe","Elefant","Wasser","Brot"],
+   pages:[
+   {de:"Heute gehen Ben und Mama in den Zoo. Die Sonne scheint.",en:"Today Ben and Mum go to the zoo. The sun is shining.",
+    scene:sc("day",[["☀️",86,66,14,"float"],["👦",30,14,20,"bob"],["👩",52,14,24,"bob"],["🌳",90,16,22,"sway"],["🌳",10,16,22,"sway"]])},
+   {de:"Da ist ein Löwe. Der Löwe ist groß und stark. Er brüllt laut.",en:"There is a lion. The lion is big and strong. He roars loudly.",
+    scene:sc("day",[["🦁",54,12,34,"bob"],["💬",76,52,10,"float"],["🌳",90,16,22,"sway"],["👦",16,14,18,"bob"]])},
+   {de:"Die Affen sind lustig. Sie springen und lachen.",en:"The monkeys are funny. They jump and laugh.",
+    scene:sc("day",[["🌴",50,14,30,"sway"],["🐵",24,16,16,"hop"],["🐒",56,18,16,"hop"],["🐵",82,14,14,"hop"]])},
+   {de:"Ein Elefant trinkt Wasser. Er hat eine lange Nase.",en:"An elephant drinks water. He has a long nose.",
+    scene:sc("day",[["🐘",52,12,36,"bob"],["💧",80,40,10,"float"],["☀️",86,68,12,"float"]])},
+   {de:"Ben hat Hunger. Mama gibt Ben ein Brot.",en:"Ben is hungry. Mum gives Ben some bread.",
+    scene:sc("warm",[["👦",26,14,22,"bob"],["👩",70,14,26,"bob"],["🍞",48,40,12,"float"],["🌸",10,6,8]])},
+   {de:"Am Abend ist Ben müde. Er sagt: „Tschüss, Tiere! Bis bald!“",en:"In the evening Ben is tired. He says: “Bye, animals! See you soon!”",
+    scene:sc("sunset",[["🌅",50,40,40,"float"],["👦",20,12,18,"bob"],["🦁",50,12,16,"bob"],["🐘",76,12,20,"bob"],["👋",34,40,9,"float"]])}
+   ],
+   quiz:[
+    {q:"Was trinkt der Elefant?",en:"What does the elephant drink?",choices:[["💧","Wasser"],["🥛","Milch"],["🍯","Honig"]],ok:0},
+    {q:"Wer springt und lacht?",en:"Who jumps and laughs?",choices:[["🐵","Affen"],["🦁","Löwe"],["🐘","Elefant"]],ok:0}
+   ]},
+ { id:"hotel", title:"Das Hotel am Meer", en:"The hotel by the sea",
+   words:["Hotel","Schlüssel","Bett","Pizza","Zahn"],
+   pages:[
+   {de:"Die Familie kommt im Hotel an. Das Hotel ist groß und schön.",en:"The family arrives at the hotel. The hotel is big and beautiful.",
+    scene:sc("day",[["🏨",50,12,46],["🚗",16,12,18,"bob"],["☀️",86,68,12,"float"],["🌳",92,16,18,"sway"]])},
+   {de:"Papa holt den Schlüssel. Das Zimmer ist oben.",en:"Dad gets the key. The room is upstairs.",
+    scene:sc("warm",[["👨",30,10,28,"bob"],["🔑",56,40,12,"float"],["🏨",82,16,22]])},
+   {de:"Im Zimmer ist ein großes Bett. Mia springt aufs Bett. Hopp!",en:"In the room there is a big bed. Mia jumps onto the bed. Hop!",
+    scene:sc("warm",[["🛏️",56,10,40],["👧",36,40,16,"hop"],["⭐",76,56,6,"twinkle"]])},
+   {de:"Mia sieht das Meer. Es glitzert in der Sonne.",en:"Mia sees the sea. It sparkles in the sun.",
+    scene:sc("beach",[["🌊",30,34,22,"drift"],["🌊",58,36,22,"drift"],["☀️",84,66,14,"float"],["✨",44,56,8,"twinkle"],["👧",80,14,20,"bob"]])},
+   {de:"Zum Abendessen gibt es Pizza. Mmm, lecker!",en:"For dinner there is pizza. Mmm, tasty!",
+    scene:sc("warm",[["🍕",50,20,24,"bob"],["👧",20,10,22,"bob"],["👩",80,10,24,"bob"],["❤️",50,60,8,"float"]])},
+   {de:"Mia putzt die Zähne. Dann kommt Mama. Gute Nacht, Mia!",en:"Mia brushes her teeth. Then Mum comes. Good night, Mia!",
+    scene:sc("night",[["🌙",80,66,14,"float"],["🛏️",50,10,38],["👧",36,40,12,"bob"],["🦷",62,48,9,"float"],["👩",84,10,22,"bob"]])}
+   ],
+   quiz:[
+    {q:"Wer holt den Schlüssel?",en:"Who gets the key?",choices:[["👨","Papa"],["👩","Mama"],["👵","Oma"]],ok:0},
+    {q:"Was gibt es zum Abendessen?",en:"What is there for dinner?",choices:[["🍰","Kuchen"],["🍕","Pizza"],["🍞","Brot"]],ok:1}
+   ]},
+ { id:"ball", title:"Der rote Ball", en:"The red ball",
+   words:["Ball","Freund","Baum","Kind","Hand"],
+   pages:[
+   {de:"{name} hat einen Ball. Der Ball ist rot.",en:"{name} has a ball. The ball is red.",
+    scene:sc("day",[["🧒",36,14,26,"bob"],["⚽",64,14,14,"hop"],["🔴",64,50,6,"float"],["☀️",86,68,12,"float"],["🌳",92,16,22,"sway"]])},
+   {de:"Da kommt ein Freund. Er heißt Tom.",en:"A friend comes along. His name is Tom.",
+    scene:sc("day",[["🧒",26,14,22,"bob"],["👦",70,14,22,"bob"],["👋",48,50,9,"float"],["🌳",90,16,22,"sway"]])},
+   {de:"Tom sagt: „Hallo! Spielen wir?“ {name} sagt: „Ja!“",en:"Tom says: “Hello! Shall we play?” {name} says: “Yes!”",
+    scene:sc("day",[["🧒",30,14,22,"bob"],["👦",66,14,22,"bob"],["💬",36,56,10,"float"],["💬",70,56,10,"float"],["⚽",50,10,10,"bob"]])},
+   {de:"Sie spielen mit dem Ball. Der Ball fliegt hoch!",en:"They play with the ball. The ball flies high!",
+    scene:sc("day",[["🧒",24,14,20,"hop"],["👦",76,14,20,"hop"],["⚽",50,52,12,"float"],["☀️",86,68,12,"float"]])},
+   {de:"Oh nein! Der Ball ist im Baum!",en:"Oh no! The ball is in the tree!",
+    scene:sc("day",[["🌳",56,10,52,"sway"],["⚽",56,50,9,"float"],["🧒",20,14,20,"bob"],["👦",86,14,16,"bob"],["❗",34,52,8,"float"]])},
+   {de:"Der Wind weht. Der Ball fällt runter. Hurra!",en:"The wind blows. The ball falls down. Hooray!",
+    scene:sc("day",[["💨",34,50,14,"drift"],["🌳",64,10,40,"sway"],["⚽",54,24,10,"hop"],["🧒",20,14,20,"hop"],["🎉",84,56,10,"float"]])}
+   ],
+   quiz:[
+    {q:"Wo ist der Ball?",en:"Where is the ball?",choices:[["🌳","Baum"],["🏠","Haus"],["🚗","Auto"]],ok:0},
+    {q:"Wie heißt der Freund?",en:"What is the friend called?",choices:[["👦","Tom"],["👧","Lena"],["👴","Opa"]],ok:0}
+   ]},
+ { id:"schnee", title:"Der Schneemann", en:"The snowman",
+   words:["Schnee","Hut","Karotte","Mond","Milch"],
+   pages:[
+   {de:"Es schneit! Alles ist weiß. Ida ist froh.",en:"It is snowing! Everything is white. Ida is happy.",
+    scene:sc("snow",[["❄️",20,60,8,"fall"],["❄️",44,62,8,"fall"],["❄️",70,58,8,"fall"],["🧒",50,14,26,"bob"],["🌲",12,14,26,"sway"],["🌲",90,14,26,"sway"]])},
+   {de:"Ida baut einen Schneemann. Zuerst kommt ein großer Ball, dann ein kleiner Ball.",en:"Ida builds a snowman. First a big ball, then a small ball.",
+    scene:sc("snow",[["⚪",44,10,24],["⚪",44,34,16],["🧒",76,14,22,"bob"],["❄️",20,60,8,"fall"]])},
+   {de:"Der Schneemann bekommt eine Karotte. Das ist seine Nase.",en:"The snowman gets a carrot. That is his nose.",
+    scene:sc("snow",[["⛄",50,12,34,"bob"],["🥕",72,40,10,"float"],["🧒",20,14,22,"bob"]])},
+   {de:"Auch ein Hut muss auf den Kopf. Jetzt ist er fertig!",en:"A hat has to go on his head too. Now he is finished!",
+    scene:sc("snow",[["⛄",50,12,34,"bob"],["🎩",50,56,12,"float"],["🧒",22,14,22,"hop"],["🎉",80,50,10,"float"]])},
+   {de:"Ida trinkt Milch. Sie ist glücklich.",en:"Ida drinks milk. She is happy.",
+    scene:sc("warm",[["🧒",34,10,26,"bob"],["🥛",60,30,14,"float"],["❤️",72,56,9,"float"],["☃️",86,12,12]])},
+   {de:"Am Abend schneit es wieder. Der Schneemann schläft. Gute Nacht!",en:"In the evening it snows again. The snowman sleeps. Good night!",
+    scene:sc("night",[["🌙",80,66,14,"float"],["⛄",50,14,28,"bob"],["❄️",24,52,6,"fall"],["❄️",66,56,6,"fall"],["💤",64,50,9,"float"]])}
+   ],
+   quiz:[
+    {q:"Was ist die Nase?",en:"What is the nose?",choices:[["🥕","Karotte"],["🍎","Apfel"],["🍌","Banane"]],ok:0},
+    {q:"Wie ist der Schnee?",en:"What colour is the snow?",choices:[["⚪","weiß"],["🔴","rot"],["🟢","grün"]],ok:0}
+   ]},
+ { id:"wal", title:"Willi, der kleine Wal", en:"Willi, the little whale",
+   words:["Wal","Fisch","Krabbe","Meer","Sonne"],
+   pages:[
+   {de:"Im Meer lebt ein kleiner Wal. Er heißt Willi.",en:"A little whale lives in the sea. His name is Willi.",
+    scene:sc("lake",[["🐋",50,18,40,"bob"],["☀️",86,66,14,"float"],["🌊",22,30,16,"drift"]])},
+   {de:"Willi schwimmt und singt. Die Fische hören zu.",en:"Willi swims and sings. The fish listen.",
+    scene:sc("lake",[["🐋",40,20,32,"bob"],["🎶",64,50,10,"float"],["🐟",76,20,12,"drift"],["🐠",88,34,10,"drift"]])},
+   {de:"Eine Krabbe sagt: „Hallo, Willi!“ Willi sagt: „Hallo!“",en:"A crab says: “Hello, Willi!” Willi says: “Hello!”",
+    scene:sc("lake",[["🦀",24,12,16,"hop"],["🐋",64,20,30,"bob"],["💬",36,52,10,"float"],["💬",70,56,10,"float"]])},
+   {de:"Alle spielen zusammen. Das macht Spaß!",en:"Everyone plays together. That is fun!",
+    scene:sc("lake",[["🐋",50,20,28,"bob"],["🐟",20,24,12,"drift"],["🦀",80,12,14,"hop"],["🐠",30,44,10,"drift"],["🎈",72,56,9,"float"]])},
+   {de:"Die Sonne geht unter. Es wird dunkel.",en:"The sun goes down. It gets dark.",
+    scene:sc("sunset",[["🌅",50,38,44,"float"],["🐋",50,16,26,"bob"],["🌊",20,16,22,"drift"],["🌊",80,16,22,"drift"]])},
+   {de:"Willi sagt: „Gute Nacht, Freunde!“ Der Wal schläft ein.",en:"Willi says: “Good night, friends!” The whale falls asleep.",
+    scene:sc("nightsea",[["🌙",78,66,14,"float"],["⭐",24,70,6,"twinkle"],["🐋",50,18,30,"bob"],["💤",66,46,9,"float"]])}
+   ],
+   quiz:[
+    {q:"Wer singt?",en:"Who sings?",choices:[["🐋","Wal"],["🐟","Fisch"],["🦀","Krabbe"]],ok:0},
+    {q:"Wer sagt „Hallo“?",en:"Who says “Hello”?",choices:[["🦀","Krabbe"],["🐻","Bär"],["🐘","Elefant"]],ok:0}
+   ]},
+ { id:"geburtstag", title:"Papa hat Geburtstag", en:"Dad’s birthday",
+   words:["Kuchen","Herz","Oma","Opa","Papa"],
+   pages:[
+   {de:"Heute hat Papa Geburtstag. Alle sind froh.",en:"Today it is Dad’s birthday. Everyone is happy.",
+    scene:sc("warm",[["🎈",20,50,12,"float"],["🎈",80,56,12,"float"],["👨",50,10,30,"bob"],["🎉",36,56,10,"float"]])},
+   {de:"Mama backt einen Kuchen. Der Kuchen ist groß.",en:"Mum bakes a cake. The cake is big.",
+    scene:sc("warm",[["👩",30,10,28,"bob"],["🎂",64,12,28,"bob"],["⭐",80,56,6,"twinkle"]])},
+   {de:"Lena malt ein Bild für Papa. Es ist ein Herz.",en:"Lena paints a picture for Dad. It is a heart.",
+    scene:sc("warm",[["👧",30,10,26,"bob"],["🖼️",66,30,18,"float"],["❤️",66,42,8,"float"]])},
+   {de:"Da klingelt es. Oma und Opa kommen.",en:"The doorbell rings. Grandma and Grandpa are coming.",
+    scene:sc("warm",[["🔔",50,56,10,"sway"],["👵",30,10,26,"bob"],["👴",66,10,26,"bob"],["🚪",90,10,18]])},
+   {de:"Alle sagen: „Alles Gute zum Geburtstag!“",en:"Everyone says: “Happy birthday!”",
+    scene:sc("warm",[["👨",50,10,24,"bob"],["👩",22,10,22,"bob"],["👧",78,10,20,"bob"],["🎉",50,54,12,"float"],["🎁",90,10,12]])},
+   {de:"Papa pustet die Kerzen aus. Dann essen alle Kuchen. Lecker!",en:"Dad blows out the candles. Then everyone eats cake. Tasty!",
+    scene:sc("warm",[["🎂",50,12,28,"bob"],["🕯️",50,40,8,"twinkle"],["👨",20,10,24,"bob"],["👧",80,10,20,"bob"],["❤️",50,60,8,"float"]])}
+   ],
+   quiz:[
+    {q:"Wer hat Geburtstag?",en:"Whose birthday is it?",choices:[["👨","Papa"],["👩","Mama"],["👧","Lena"]],ok:0},
+    {q:"Wer malt ein Bild?",en:"Who paints a picture?",choices:[["👧","Lena"],["👴","Opa"],["👵","Oma"]],ok:0}
    ]}
 ];
+/* Traditional German nursery rhymes and children's songs (public domain, first verses). */
+const RHYMES = [
+ { id:"entchen", kind:"reim", title:"Alle meine Entchen", en:"All my little ducklings",
+   pages:[
+   {de:"Alle meine Entchen\nschwimmen auf dem See,\nschwimmen auf dem See,\nKöpfchen in das Wasser,\nSchwänzchen in die Höh’.",
+    en:"All my little ducklings swim on the lake, heads in the water, tails up high.",
+    scene:sc("lake",[["🦆",24,22,16,"bob"],["🦆",50,18,18,"bob"],["🦆",76,22,16,"bob"],["☀️",86,66,14,"float"],["🌿",8,18,10,"sway"]])},
+   {de:"Alle meine Täubchen\ngurren auf dem Dach,\ngurren auf dem Dach,\nfliegt eins in die Lüfte,\nfliegen alle nach.",
+    en:"All my little doves coo on the roof; when one flies into the air, all fly after it.",
+    scene:sc("day",[["🏠",50,12,34],["🕊️",36,56,14,"fly"],["🕊️",58,62,14,"fly"],["🕊️",76,52,12,"fly"],["☁️",22,70,14,"drift"]])}
+   ]},
+ { id:"haenschen", kind:"reim", title:"Hänschen klein", en:"Little Hans",
+   pages:[
+   {de:"Hänschen klein\nging allein\nin die weite Welt hinein.",
+    en:"Little Hans went out alone into the wide world.",
+    scene:sc("day",[["🌍",70,50,28,"float"],["🧒",34,14,24,"bob"],["🎩",34,40,9,"float"],["🌳",90,16,22,"sway"],["🛣️",50,3,30]])},
+   {de:"Stock und Hut\nsteht ihm gut,\nist gar wohlgemut.",
+    en:"Stick and hat suit him well; he is in a cheerful mood.",
+    scene:sc("day",[["🎩",50,44,14,"float"],["🧒",34,14,24,"bob"],["😊",66,50,10,"float"],["🌳",90,16,22,"sway"],["🌿",14,8,12,"sway"]])},
+   {de:"Aber Mama weinet sehr,\nhat ja nun kein Hänschen mehr!\n„Wünsch dir Glück!“\nsagt ihr Blick,\n„Kehr bald wieder heim zurück!“",
+    en:"But Mum cries a lot; she has no Hans any more! “Wish yourself luck!” says her look, “Come back home soon!”",
+    scene:sc("warm",[["👩",36,10,28,"bob"],["😢",36,42,9,"float"],["🏠",78,12,26],["❤️",58,56,9,"float"]])}
+   ]},
+ { id:"kuchen", kind:"reim", title:"Backe, backe Kuchen", en:"Bake, bake a cake",
+   pages:[
+   {de:"Backe, backe Kuchen,\nder Bäcker hat gerufen.\nWer will guten Kuchen backen,\nder muss haben sieben Sachen:",
+    en:"Bake, bake a cake, the baker has called. Whoever wants to bake a good cake needs seven things:",
+    scene:sc("warm",[["👨",26,10,28,"bob"],["🍰",60,16,22,"bob"],["🔔",44,56,10,"float"],["🥖",84,16,14]])},
+   {de:"Eier und Schmalz,\nButter und Salz,\nMilch und Mehl,\nSafran macht den Kuchen gehl!\nSchieb, schieb in den Ofen rein!",
+    en:"Eggs and lard, butter and salt, milk and flour; saffron makes the cake yellow! Push, push it into the oven!",
+    scene:sc("warm",[["🥚",14,18,11,"float"],["🧂",30,18,11,"float"],["🥛",46,18,11,"float"],["🌾",62,18,11,"float"],["🔥",84,16,14,"sway"],["🍰",84,36,10,"bob"]])}
+   ]},
+ { id:"kuckuck", kind:"reim", title:"Kuckuck, Kuckuck", en:"Cuckoo, cuckoo",
+   pages:[
+   {de:"Kuckuck, Kuckuck, ruft’s aus dem Wald.\nLasset uns singen,\ntanzen und springen!\nFrühling, Frühling wird es nun bald.",
+    en:"“Cuckoo, cuckoo,” it calls from the forest. Let us sing, dance and jump! Spring, spring will soon be here.",
+    scene:sc("day",[["🌲",20,14,32,"sway"],["🌲",84,14,30,"sway"],["🐦",50,40,16,"bob"],["🌷",30,6,9],["🌸",56,6,9],["🌼",72,6,9],["🎶",50,66,10,"float"]])}
+   ]},
+ { id:"summ", kind:"reim", title:"Summ, summ, summ", en:"Buzz, buzz, buzz",
+   pages:[
+   {de:"Summ, summ, summ!\nBienchen, summ herum!\nEi, wir tun dir nichts zuleide,\nflieg nur aus in Wald und Heide.\nSumm, summ, summ!\nBienchen, summ herum!",
+    en:"Buzz, buzz, buzz! Little bee, buzz around! Oh, we will not hurt you; just fly out to the forest and the heath.",
+    scene:sc("day",[["🐝",34,46,12,"fly"],["🐝",62,56,10,"fly"],["🌻",24,8,16,"sway"],["🌸",52,6,10],["🌼",78,8,12,"sway"],["🌳",90,16,22,"sway"],["☀️",86,68,12,"float"]])}
+   ]},
+ { id:"voegel", kind:"reim", title:"Alle Vögel sind schon da", en:"All the birds are here",
+   pages:[
+   {de:"Alle Vögel sind schon da,\nalle Vögel, alle!\nWelch ein Singen, Musizieren,",
+    en:"All the birds are already here, all the birds! What singing and making of music,",
+    scene:sc("day",[["🌳",50,12,50,"sway"],["🐦",36,56,10,"bob"],["🐦",52,66,10,"bob"],["🐦",66,52,10,"bob"],["🐦",20,40,10,"fly"],["🌸",86,6,9]])},
+   {de:"Pfeifen, Zwitschern, Tirilieren!\nFrühling will nun einmarschieren,\nkommt mit Sang und Schalle.",
+    en:"whistling, chirping, warbling! Spring wants to march in now; it comes with song and sound.",
+    scene:sc("day",[["🎶",30,64,10,"float"],["🎶",70,60,10,"float"],["🐦",50,40,16,"bob"],["🌷",26,6,10],["🌼",50,6,10],["🌸",76,6,10],["☀️",86,68,14,"float"]])}
+   ]},
+ { id:"grube", kind:"reim", title:"Häschen in der Grube", en:"Little bunny in the hole",
+   pages:[
+   {de:"Häschen in der Grube\nsaß und schlief,\nsaß und schlief.\nArmes Häschen, bist du krank,\ndass du nicht mehr hüpfen kannst?\nHäschen, hüpf, Häschen, hüpf!",
+    en:"Little bunny in the hole sat and slept. Poor little bunny, are you ill, that you cannot hop any more? Bunny, hop, bunny, hop!",
+    scene:sc("day",[["🕳️",50,6,20],["🐰",50,12,22,"hop"],["💤",64,34,9,"float"],["🌿",20,8,12,"sway"],["🌿",82,8,12,"sway"]])}
+   ]},
+ { id:"maennlein", kind:"reim", title:"Ein Männlein steht im Walde", en:"A little man stands in the forest",
+   pages:[
+   {de:"Ein Männlein steht im Walde\nganz still und stumm,\nes hat von lauter Purpur\nein Mäntlein um.",
+    en:"A little man stands in the forest, quite still and silent; he wears a little coat of pure purple.",
+    scene:sc("day",[["🌲",14,14,28,"sway"],["🌲",86,14,30,"sway"],["🌲",36,14,22,"sway"],["🧙",58,12,22,"bob"]])},
+   {de:"Sagt, wer mag das Männlein sein,\ndas da steht im Wald allein\nmit dem purpurroten Mäntelein?",
+    en:"Tell me, who can the little man be, who stands there in the forest alone in his little purple-red coat?",
+    scene:sc("day",[["❓",50,60,14,"float"],["🧙",50,12,24,"bob"],["🌲",14,14,28,"sway"],["🌲",88,14,28,"sway"],["🍄",70,6,10]])}
+   ]},
+ { id:"jakob", kind:"reim", title:"Bruder Jakob", en:"Brother Jacob",
+   pages:[
+   {de:"Bruder Jakob, Bruder Jakob,\nschläfst du noch? Schläfst du noch?\nHörst du nicht die Glocken?\nHörst du nicht die Glocken?\nDing, dang, dong. Ding, dang, dong.",
+    en:"Brother Jacob, Brother Jacob, are you still sleeping? Do you not hear the bells? Ding, dang, dong.",
+    scene:sc("warm",[["🛏️",40,10,34],["🧔",40,34,12,"bob"],["💤",52,56,9,"float"],["🔔",78,36,14,"sway"],["🔔",90,28,10,"sway"]])}
+   ]},
+ { id:"vogel", kind:"reim", title:"Kommt ein Vogel geflogen", en:"A bird comes flying",
+   pages:[
+   {de:"Kommt ein Vogel geflogen,\nsetzt sich nieder auf mein Fuß,\nhat ein Zettel im Schnabel,\nvon der Mutter einen Gruß.",
+    en:"A bird comes flying, sits down on my foot, has a note in its beak, a greeting from Mother.",
+    scene:sc("day",[["🐦",56,34,14,"fly"],["✉️",70,50,8,"float"],["🧒",36,14,22,"bob"],["☀️",86,68,12,"float"],["🌳",90,16,22,"sway"]])}
+   ]},
+ { id:"schlaf", kind:"reim", title:"Schlaf, Kindlein, schlaf", en:"Sleep, little child, sleep",
+   pages:[
+   {de:"Schlaf, Kindlein, schlaf!\nDer Vater hüt’ die Schaf.\nDie Mutter schüttelt’s Bäumelein,\nda fällt herab ein Träumelein.\nSchlaf, Kindlein, schlaf!",
+    en:"Sleep, little child, sleep! Father watches the sheep. Mother shakes the little tree, and a little dream falls down. Sleep, little child, sleep!",
+    scene:sc("night",[["🌙",80,66,14,"float"],["⭐",20,70,6,"twinkle"],["🐑",20,14,14,"bob"],["🐑",38,12,12,"bob"],["🌳",74,14,26,"sway"],["💭",56,48,12,"float"],["👶",56,12,16,"bob"]])}
+   ]},
+ { id:"abend", kind:"reim", title:"Guten Abend, gut’ Nacht", en:"Good evening, good night",
+   pages:[
+   {de:"Guten Abend, gut’ Nacht,\nmit Rosen bedacht,\nmit Näglein besteckt,\nschlüpf unter die Deck’.\nMorgen früh, wenn Gott will,\nwirst du wieder geweckt.",
+    en:"Good evening, good night, covered with roses, decorated with little carnations; slip under the covers. Tomorrow morning, God willing, you will be woken again.",
+    scene:sc("night",[["🌙",78,66,14,"float"],["⭐",24,72,6,"twinkle"],["⭐",46,64,5,"twinkle"],["🛏️",50,10,40],["👶",50,34,12,"bob"],["🌹",18,14,10,"sway"],["🌹",86,14,10,"sway"]])}
+   ]},
+ { id:"fuchs", kind:"reim", title:"Fuchs, du hast die Gans gestohlen", en:"Fox, you have stolen the goose",
+   pages:[
+   {de:"Fuchs, du hast die Gans gestohlen,\ngib sie wieder her!\nGib sie wieder her!\nSonst wird dich der Jäger holen\nmit dem Schießgewehr.",
+    en:"Fox, you have stolen the goose, give it back! Give it back! Otherwise the hunter will come and get you with his rifle.",
+    scene:sc("day",[["🦊",30,12,22,"hop"],["🦆",68,12,18,"bob"],["🌳",90,16,24,"sway"],["💬",48,56,10,"float"],["🌿",10,8,12,"sway"]])}
+   ]},
+ { id:"regnet", kind:"reim", title:"Es regnet, es regnet", en:"It rains, it rains",
+   pages:[
+   {de:"Es regnet, es regnet,\nes regnet seinen Lauf,\nund wenn’s genug geregnet hat,\ndann hört es wieder auf.",
+    en:"It rains, it rains, it rains its course, and when it has rained enough, then it stops again.",
+    scene:sc("rain",[["☁️",30,68,22,"drift"],["☁️",72,72,20,"drift"],["💧",24,54,4,"fall"],["💧",44,58,4,"fall"],["💧",62,56,4,"fall"],["💧",80,60,4,"fall"],["☂️",40,12,22,"bob"],["🐸",72,12,16,"hop"]])}
+   ]},
+ { id:"mond", kind:"reim", title:"Der Mond ist aufgegangen", en:"The moon has risen",
+   pages:[
+   {de:"Der Mond ist aufgegangen,\ndie goldnen Sternlein prangen\nam Himmel hell und klar;\nder Wald steht schwarz und schweiget,\nund aus den Wiesen steiget\nder weiße Nebel wunderbar.",
+    en:"The moon has risen, the little golden stars shine bright and clear in the sky; the forest stands black and silent, and from the meadows the white fog rises wonderfully.",
+    scene:sc("night",[["🌕",70,52,24,"float"],["⭐",22,66,6,"twinkle"],["⭐",40,74,5,"twinkle"],["⭐",52,58,6,"twinkle"],["🌲",12,14,26,"sway"],["🌲",36,14,22,"sway"],["🌲",90,14,28,"sway"],["🌫️",56,10,26,"drift"]])}
+   ]},
+ { id:"sternlein", kind:"reim", title:"Weißt du, wie viel Sternlein stehen", en:"Do you know how many little stars",
+   pages:[
+   {de:"Weißt du, wie viel Sternlein stehen\nan dem blauen Himmelszelt?\nWeißt du, wie viel Wolken gehen\nweithin über alle Welt?",
+    en:"Do you know how many little stars stand in the blue vault of the sky? Do you know how many clouds travel far over all the world?",
+    scene:sc("night",[["⭐",20,60,8,"twinkle"],["⭐",38,70,6,"twinkle"],["⭐",56,58,9,"twinkle"],["⭐",74,72,6,"twinkle"],["⭐",86,56,7,"twinkle"],["☁️",30,38,18,"drift"],["☁️",70,34,20,"drift"],["🌙",50,14,14,"float"]])}
+   ]},
+ { id:"polizei", kind:"reim", title:"Eins, zwei, Polizei", en:"One, two, police",
+   pages:[
+   {de:"Eins, zwei, Polizei,\ndrei, vier, Offizier,\nfünf, sechs, alte Hex’,",
+    en:"One, two, police; three, four, officer; five, six, old witch,",
+    scene:sc("day",[["🚓",30,12,24,"bob"],["🧙",68,12,22,"bob"],["1️⃣",16,60,10,"float"],["2️⃣",34,66,10,"float"],["3️⃣",52,60,10,"float"],["4️⃣",70,66,10,"float"],["5️⃣",86,60,10,"float"]])},
+   {de:"sieben, acht, gute Nacht,\nneun, zehn, schlafen gehn.",
+    en:"seven, eight, good night; nine, ten, going to sleep.",
+    scene:sc("night",[["🌙",78,66,14,"float"],["🛏️",40,10,34],["😴",40,34,12,"bob"],["7️⃣",18,64,9,"float"],["8️⃣",34,70,9,"float"],["9️⃣",56,68,9,"float"],["🔟",76,40,9,"float"]])}
+   ]},
+ { id:"wandern", kind:"reim", title:"Das Wandern ist des Müllers Lust", en:"Hiking is the miller’s joy",
+   pages:[
+   {de:"Das Wandern ist des Müllers Lust,\ndas Wandern!\nDas Wandern ist des Müllers Lust,\ndas Wandern!",
+    en:"Hiking is the miller’s joy, hiking! Hiking is the miller’s joy, hiking!",
+    scene:sc("day",[["⛰️",74,12,36],["🚶",30,14,22,"bob"],["🌾",12,8,12,"sway"],["🌾",48,8,12,"sway"],["☀️",86,68,12,"float"],["🌳",92,16,22,"sway"]])},
+   {de:"Das muss ein schlechter Müller sein,\ndem niemals fiel das Wandern ein,\ndas Wandern.",
+    en:"He must be a bad miller who never thought of hiking, hiking.",
+    scene:sc("day",[["🏠",72,12,30],["🚶",30,14,22,"bob"],["🌾",12,8,12,"sway"],["💭",44,50,12,"float"],["☀️",86,68,12,"float"]])}
+   ]},
+ { id:"hopp", kind:"reim", title:"Hopp, hopp, hopp", en:"Hop, hop, hop",
+   pages:[
+   {de:"Hopp, hopp, hopp,\nPferdchen, lauf Galopp!\nÜber Stock und über Steine,\naber brich dir nicht die Beine!\nHopp, hopp, hopp,\nPferdchen, lauf Galopp!",
+    en:"Hop, hop, hop, little horse, gallop! Over sticks and over stones, but do not break your legs! Hop, hop, hop, little horse, gallop!",
+    scene:sc("day",[["🏇",50,12,30,"hop"],["🌿",14,8,12,"sway"],["🌳",90,16,24,"sway"],["☀️",86,68,12,"float"],["💨",24,30,12,"drift"]])}
+   ]},
+ { id:"baum", kind:"reim", title:"Auf einem Baum ein Kuckuck", en:"A cuckoo in a tree",
+   pages:[
+   {de:"Auf einem Baum ein Kuckuck,\nsim sa la dim, bam ba,\nsa la du, sa la dim,\nauf einem Baum ein Kuckuck saß.",
+    en:"A cuckoo sat in a tree (the middle lines are just fun sounds, like “la la la”).",
+    scene:sc("day",[["🌳",50,12,50,"sway"],["🐦",50,56,14,"bob"],["🎶",26,60,10,"float"],["🎶",76,64,10,"float"],["☀️",88,70,12,"float"]])}
+   ]}
+];
+
+/* ---- Melodies for sing-along (note names: c = middle C, c' = one octave up, g, = one octave down; numbers = note length) ---- */
+const TUNE_ENTCHEN = {bpm:96, notes:"c4 d e f g2 g a4 a a a g1 a4 a a a g1 f4 f f f e2 e d4 d d d c1",
+  nw:[2,2,2, 2,1,1,1, 2,1,1,1, 2,1,1,2, 2,1,1,1]};
+const TUNE_TAEUBCHEN = {bpm:96, notes:TUNE_ENTCHEN.notes,
+  nw:[2,2,2, 2,1,1,1, 2,1,1,1, 1,1,1,1,2, 2,2,1]};
+const TUNE_JAKOB = {bpm:112, notes:"c4 d e c c d e c e f g2 e4 f g2 g8 a g f e4 c g8 a g f e4 c c4 g, c2 c4 g, c2",
+  nw:[2,2,2,2, 1,1,1,1,1,1, 1,1,1,1,2, 1,1,1,1,2, 1,1,1,1,1,1]};
+const TUNE_VOEGEL1 = {bpm:96, notes:"c4. e8 g4 c'4 a4 c'8 a8 g2 f4. a8 e4 c d2 c2 g4 g f f e g8 e d2",
+  nw:[2,2,1,2,1, 2,2,2, 1,1,2,4]};
+const TUNE_VOEGEL2 = {bpm:96, notes:"g4 g f f e g8 e d2 c4. e8 g4 c'4 a4 c'8 a8 g2 f4. g8 e4 c d2 c2",
+  nw:[2,2,4, 2,1,1,4, 1,1,1,1,2]};
+const TUNE_HAENSCHEN = {bpm:100, notes:"g4 e e2 f4 d d2 c4 d e f g g g2",
+  nw:[2,1, 1,2, 1,1,2,1,2]};
+const TUNES = {entchen:[TUNE_ENTCHEN,TUNE_TAEUBCHEN], jakob:[TUNE_JAKOB], voegel:[TUNE_VOEGEL1,TUNE_VOEGEL2], haenschen:[TUNE_HAENSCHEN]};
+RHYMES.forEach(r=>{ const t=TUNES[r.id]; if(t) t.forEach((tu,i)=>{ if(tu) r.pages[i].tune=tu; }); });
+const ALL = STORIES.concat(RHYMES);
+const findStory = id => ALL.find(s=>s.id===id);
+const TRAVEL_IDS = ["koffer","zug","auto","flug","strand","berg","hotel","zoo"];
 
 /* ============ sound & speech ============ */
 let ac;
@@ -433,6 +903,7 @@ function loadVoice(){
 if(hasTTS){ loadVoice(); try{ speechSynthesis.onvoiceschanged=loadVoice; }catch(e){} }
 function stopSpeak(){
   sid++; timers.forEach(clearTimeout); timers=[];
+  try{ stopSing(); }catch(e){}
   if(hasTTS){ try{ speechSynthesis.cancel(); }catch(e){} }
 }
 function say(text,o){
@@ -480,7 +951,7 @@ window.addEventListener("resize",fitScenes);
 function setRoute(n,arg){ stopSpeak(); route={name:n,arg:arg}; window.scrollTo(0,0); }
 function go(n,arg){ setRoute(n,arg); render(); }
 function render(){
-  const v={home:vHome,stories:vStories,book:vBook,words:vWords,spell:vSpell,phrases:vPhrases,settings:vSettings}[route.name];
+  const v={home:vHome,stories:vStories,rhymes:vRhymes,book:vBook,words:vWords,spell:vSpell,phrases:vPhrases,settings:vSettings}[route.name];
   (v||vHome)(route.arg);
 }
 main.addEventListener("click",e=>{
@@ -497,6 +968,10 @@ function sceneHTML(s){
   return `<div class="scene" style="--sky1:${a};--sky2:${b};--ground:${g}">${s.items.map((it,i)=>
     `<span class="it" style="left:${it[1]}%;bottom:${it[2]}%;--s:${it[3]}"><i class="an ${it[4]||""}" style="animation-delay:-${(i*.37).toFixed(2)}s">${it[0]}</i></span>`).join("")}</div>`;
 }
+function coverBtn(s,flex){
+  return `<button class="cover"${flex===false?' style="flex:none"':''} data-act="story" data-id="${s.id}">${sceneHTML(s.pages[0].scene)}
+    <b>${s.pages.some(p=>p.tune)?"🎵 ":""}${esc(s.title)}${P.tr?`<small>${esc(s.en)}</small>`:""}</b><span class="st">${starsStr(S.stars["story-"+s.id]||0)}</span></button>`;
+}
 function vHome(){
   const total=Object.values(S.stars).reduce((a,b)=>a+b,0);
   const known=Object.keys(S.mastery).length;
@@ -504,65 +979,121 @@ function vHome(){
   <h1 class="hi">Hallo, ${esc(P.name)}! 👋</h1>
   <p class="sub">${lbl("Was möchtest du heute machen?","What would you like to do today?")}</p>
   <h2 class="sec">📚 ${lbl("Geschichten","Stories")}</h2>
-  <div class="covers">${STORIES.map((s,i)=>`
-    <button class="cover" data-act="story" data-i="${i}">${sceneHTML(s.pages[0].scene)}
-      <b>${esc(s.title)}${P.tr?`<small>${esc(s.en)}</small>`:""}</b><span class="st">${starsStr(S.stars["story-"+s.id]||0)}</span></button>`).join("")}</div>
+  <div class="covers">${STORIES.map(s=>coverBtn(s)).join("")}</div>
+  <h2 class="sec">🎵 ${lbl("Reime & Lieder","Rhymes & songs")}</h2>
+  <div class="covers">${RHYMES.map(r=>coverBtn(r)).join("")}</div>
   <h2 class="sec">🎒 ${lbl("Üben und spielen","Practise and play")}</h2>
   <div class="grid">
     <button class="tile" style="--c:var(--violet)" data-act="go" data-to="words"><span class="ic">🃏</span><b>${lbl("Wörter & Spiele","Words & games")}</b></button>
     <button class="tile" style="--c:var(--sun)" data-act="go" data-to="spell"><span class="ic">✍️</span><b>${lbl("Buchstabieren","Spelling")}</b></button>
     <button class="tile" style="--c:var(--teal)" data-act="go" data-to="phrases"><span class="ic">💬</span><b>${lbl("Sätze","Phrases")}</b></button>
+    <button class="tile" style="--c:var(--coral)" data-act="go" data-to="stories"><span class="ic">✈️</span><b>${lbl("Reisegeschichten","Travel stories")}</b></button>
   </div>
   <p class="prog">⭐ ${total} &nbsp;·&nbsp; ${lbl("Wörter geübt","Words practised")}: ${known} / ${WORDS.length}</p>`);
 }
-acts.story = el => go("book",{i:+el.dataset.i,reset:true});
+acts.story = el => go("book",{id:el.dataset.id,reset:true});
 
 /* ============ stories ============ */
 function vStories(){
+  const travel=STORIES.filter(x=>TRAVEL_IDS.includes(x.id)), more=STORIES.filter(x=>!TRAVEL_IDS.includes(x.id));
   setMain(`<div class="bar"><button class="back" data-act="go" data-to="home">← ${lbl("Start","Home")}</button><div class="ttl">📚 ${lbl("Geschichten","Stories")}</div></div>
-  <div class="plist">${STORIES.map((s,i)=>`
-   <button class="cover" style="flex:none" data-act="story" data-i="${i}">${sceneHTML(s.pages[0].scene)}
-     <b>${esc(s.title)}${P.tr?`<small>${esc(s.en)}</small>`:""}</b><span class="st">${starsStr(S.stars["story-"+s.id]||0)}</span></button>`).join("")}</div>`);
+  <h2 class="sec">✈️ ${lbl("Unterwegs","On the road")}</h2>
+  <div class="plist">${travel.map(x=>coverBtn(x,false)).join("")}</div>
+  <h2 class="sec">🌙 ${lbl("Mehr Geschichten","More stories")}</h2>
+  <div class="plist">${more.map(x=>coverBtn(x,false)).join("")}</div>`);
+}
+function vRhymes(){
+  setMain(`<div class="bar"><button class="back" data-act="go" data-to="home">← ${lbl("Start","Home")}</button><div class="ttl">🎵 ${lbl("Reime & Lieder","Rhymes & songs")}</div></div>
+  <p class="sub">${lbl("Alte Kinderreime und Kinderlieder. 🎵 = mit Melodie zum Mitsingen.","Traditional children’s rhymes and songs. 🎵 = with a tune to sing along.")}</p>
+  <div class="plist">${RHYMES.map(x=>coverBtn(x,false)).join("")}</div>`);
 }
 let B=null;
 function vBook(arg){
-  const s=STORIES[arg.i];
+  const s=findStory(arg.id);
   if(!B||B.id!==s.id||arg.reset) B={id:s.id,s,p:0,auto:false};
   renderBook(true);
 }
 function tokenize(text){
-  const out=[]; const re=/([A-Za-zÄÖÜäöüß]+)|([^A-Za-zÄÖÜäöüß]+)/g; let m,wi=0;
+  const out=[]; const re=/([^\sA-Za-zÄÖÜäöüß]*)([A-Za-zÄÖÜäöüß]+)([^\sA-Za-zÄÖÜäöüß]*)|(\s+)|([^\s])/g; let m,wi=0;
   while((m=re.exec(text))){
-    if(m[1]) out.push(`<span class="w" data-act="word" data-w="${esc(m[1])}" data-i="${wi++}">${m[1]}</span>`);
-    else out.push(esc(m[2]));
+    if(m[2]) out.push(`<span class="nb">${esc(m[1])}<span class="w" data-act="word" data-w="${esc(m[2])}" data-i="${wi++}">${m[2]}</span>${esc(m[3])}</span>`);
+    else if(m[4]) out.push(esc(m[4]).replace(/\n/g,"<br>"));
+    else out.push(esc(m[5]));
   }
   return out.join("");
 }
 function renderBook(turn){
   const s=B.s, n=s.pages.length;
   if(B.p>=n){ startStoryQuiz(); return; }
-  const pg=s.pages[B.p];
+  const pg=s.pages[B.p], rh=s.kind==="reim", longT=pg.de.split("\n").length>4;
   setMain(`
-  <div class="bar"><button class="back" data-act="leave">← ${lbl("Geschichten","Stories")}</button><div class="ttl">${esc(s.title)}</div><div class="pc">${B.p+1} / ${n}</div></div>
+  <div class="bar"><button class="back" data-act="leave">← ${rh?lbl("Reime","Rhymes"):lbl("Geschichten","Stories")}</button><div class="ttl">${esc(s.title)}</div><div class="pc">${B.p+1} / ${n}</div></div>
   <div class="pagecard${turn?" turn":""}">
     ${sceneHTML(pg.scene)}
-    <div class="stext" id="stext">${tokenize(fill(pg.de))}</div>
+    <div class="stext${longT?" long":""}" id="stext">${tokenize(fill(pg.de))}</div>
     ${P.tr?`<div class="sen">${esc(fill(pg.en))}</div>`:""}
     <div class="wordbar" id="wb"></div>
   </div>
   <div class="ctl">
     <button class="nav" data-act="prev" aria-label="Zurück" ${B.p===0?"disabled":""}>◀</button>
-    <button class="big sun" data-act="readpage">🔊 ${lbl("Vorlesen","Read aloud")}</button>
+    ${pg.tune?`<button class="big sun" data-act="singpage">🎵 ${lbl("Mitsingen","Sing along")}</button>`:`<button class="big sun" data-act="readpage">🔊 ${lbl("Vorlesen","Read aloud")}</button>`}
     <button class="nav" data-act="next" aria-label="Weiter">▶</button>
   </div>
   <div class="ctl2">
     <button class="mini${B.auto?" on":""}" data-act="auto">${B.auto?"⏸ Stopp":"▶ "+(P.tr?"Ganze Geschichte / whole story":"Ganze Geschichte")}</button>
     <button class="mini${P.tr?" on":""}" data-act="trtoggle">🇬🇧 ${P.tr?"an":"aus"}</button>
+    ${pg.tune?`<button class="mini" data-act="readpage">🔊 ${lbl("Vorlesen","Read aloud")}</button><button class="mini${P.tempo===.75?" on":""}" data-act="tempo">🐢 ${lbl("langsam","slow")}</button>`:""}
   </div>
+  ${rh&&!pg.tune?`<p class="fhint" style="text-align:center;margin:10px 0 0">🎵 ${lbl("Melodie kommt bald","Tune coming soon")}</p>`:""}
   <div class="dots" style="margin-top:14px">${s.pages.map((_,i)=>`<i class="${i===B.p?"cur":i<B.p?"ok":""}"></i>`).join("")}</div>`);
   if(B.auto) setTimeout(readPage,400);
 }
-function readPage(){
+function readPage(){ if(B.s.pages[B.p].tune) singPage(); else speakPage(); }
+let singNodes=[];
+function stopSing(){ singNodes.forEach(o=>{ try{ o.stop(); }catch(e){} }); singNodes=[]; }
+const SEMI={c:0,d:2,e:4,f:5,g:7,a:9,b:11};
+function parseTune(str){
+  const out=[]; let dur=4;
+  str.trim().split(/\s+/).forEach(tok=>{
+    const m=tok.match(/^([a-gr])([',]*)(\d+)?(\.)?$/); if(!m) return;
+    if(m[3]) dur=+m[3];
+    let beats=4/dur; if(m[4]) beats*=1.5;
+    let midi=null;
+    if(m[1]!=="r"){ const up=(m[2].match(/'/g)||[]).length, dn=(m[2].match(/,/g)||[]).length; midi=60+SEMI[m[1]]+12*(up-dn); }
+    out.push({midi,beats});
+  });
+  return out;
+}
+function tuneEvents(t){
+  const notes=parseTune(t.notes), wordOf=[]; t.nw.forEach((n,w)=>{ for(let k=0;k<n;k++) wordOf.push(w); });
+  let beat=0, ci=0; const ev=[];
+  notes.forEach(n=>{ ev.push({beat,beats:n.beats,midi:n.midi,w:n.midi===null?-1:wordOf[ci++]}); beat+=n.beats; });
+  return {ev,total:beat};
+}
+function bell(freq,t0,dur){
+  const o=ac.createOscillator(), o2=ac.createOscillator(), g=ac.createGain();
+  o.type="triangle"; o2.type="sine"; o.frequency.value=freq; o2.frequency.value=freq*2;
+  o.connect(g); o2.connect(g); g.connect(ac.destination);
+  const end=t0+Math.max(.4,dur*.95);
+  g.gain.setValueAtTime(.0001,t0); g.gain.exponentialRampToValueAtTime(.3,t0+.015); g.gain.exponentialRampToValueAtTime(.0001,end);
+  o.start(t0); o2.start(t0); o.stop(end+.05); o2.stop(end+.05); singNodes.push(o,o2);
+}
+function singPage(){
+  const pg=B.s.pages[B.p], t=pg.tune; stopSpeak();
+  try{ ac = ac || new (window.AudioContext||window.webkitAudioContext)(); if(ac.state==="suspended") ac.resume(); }catch(e){ return; }
+  const my=sid, ws=[...document.querySelectorAll("#stext .w")];
+  const {ev,total}=tuneEvents(t), spb=60/(t.bpm*(P.tempo||1)), lead=.6, t0=ac.currentTime+lead;
+  ev.forEach(e=>{
+    if(e.midi!==null) bell(440*Math.pow(2,(e.midi-69)/12), t0+e.beat*spb, e.beats*spb);
+    if(e.w>=0) timers.push(setTimeout(()=>{ if(my===sid) ws.forEach((w,k)=>w.classList.toggle("on",k===e.w)); },(lead+e.beat*spb)*1000));
+  });
+  timers.push(setTimeout(()=>{
+    if(my!==sid) return;
+    ws.forEach(w=>w.classList.remove("on"));
+    if(B&&B.auto) timers.push(setTimeout(()=>{ if(B&&B.auto) nextPage(); },800));
+  },(lead+total*spb)*1000+300));
+}
+function speakPage(){
   const pg=B.s.pages[B.p], ws=[...document.querySelectorAll("#stext .w")];
   say(fill(pg.de),{
     onword:i=>ws.forEach((w,k)=>w.classList.toggle("on",k===i)),
@@ -577,8 +1108,10 @@ function nextPage(){
   if(B.p>=B.s.pages.length){ B.auto=false; }
   renderBook(true);
 }
-acts.leave = () => { B&&(B.auto=false); go("stories"); };
-acts.readpage = () => { B.auto=false; readPage(); };
+acts.leave = () => { const rh=B&&B.s.kind==="reim"; B&&(B.auto=false); go(rh?"rhymes":"stories"); };
+acts.readpage = () => { B.auto=false; speakPage(); };
+acts.singpage = () => { B.auto=false; singPage(); };
+acts.tempo = () => { P.tempo=(P.tempo===.75)?1:.75; savePrefs(); renderBook(false); };
 acts.next = () => { B.auto=false; stopSpeak(); nextPage(); };
 acts.prev = () => { B.auto=false; stopSpeak(); if(B.p>0){ B.p--; renderBook(true); } };
 acts.auto = () => { B.auto=!B.auto; if(B.auto){ renderBook(false); } else { stopSpeak(); renderBook(false); } };
@@ -589,12 +1122,31 @@ acts.word = el => {
   $("#wb").innerHTML=`<b>${esc(w)}</b>${en&&P.tr?` = ${esc(en)}`:""} 🔊`;
   say(w); el.classList.add("on"); setTimeout(()=>el.classList.remove("on"),900);
 };
-function storyWords(s){ return s.words.map(byDe).filter(Boolean); }
+function storyWords(s){ return (s.words||[]).map(byDe).filter(Boolean); }
+function rhymeQuiz(s){
+  const lines=[];
+  s.pages.forEach(p=>p.de.split("\n").forEach(l=>{
+    const m=l.match(/^(.*?)([A-Za-zÄÖÜäöüß]+)([^A-Za-zÄÖÜäöüß]*)$/);
+    if(m&&m[2].length>2&&m[1].trim().length>2) lines.push({full:l,pre:m[1],word:m[2],post:m[3]});
+  }));
+  const uniq=[...new Set(lines.map(l=>l.word.toLowerCase()))];
+  return shuffle(lines).slice(0,3).map(l=>{
+    const others=shuffle(uniq.filter(w=>w!==l.word.toLowerCase())).slice(0,2).map(o=>lines.find(x=>x.word.toLowerCase()===o).word);
+    const opts=shuffle([l.word].concat(others));
+    return {
+      prompt:`<div class="pq">${lbl("Welches Wort fehlt?","Which word is missing?")}</div><div class="bigword" style="font-size:1.6rem">${esc(l.pre)}<span style="display:inline-block;min-width:3.2em;border-bottom:4px solid var(--violet)"></span>${esc(l.post)}</div>`,
+      say:l.full, reveal:l.full,
+      choices:opts.map(o=>({html:esc(o),cls:"txt",ok:o===l.word}))
+    };
+  });
+}
 function startStoryQuiz(){
-  const s=B.s;
+  const s=B.s, rh=s.kind==="reim";
+  const extra=[{label:"📖 Nochmal lesen", fn:()=>go("book",{id:s.id,reset:true})}];
+  if(!rh) extra.unshift({label:"✍️ Wörter üben (Spelling)", fn:()=>startSpell("listen",storyWords(s),"stories")});
   runQuiz({
-    key:"story-"+s.id, back:"stories", backLabel:"Geschichten", title:"Das war eine schöne Geschichte!",
-    gen:()=>s.quiz.map(q=>{
+    key:"story-"+s.id, back:rh?"rhymes":"stories", backLabel:rh?"Reime":"Geschichten",
+    gen:()=>rh?rhymeQuiz(s):s.quiz.map(q=>{
       const ch=shuffle(q.choices.map((c,k)=>({c,ok:k===q.ok})));
       return {
         prompt:`<div class="pq">${esc(q.q)}${P.tr?`<small>${esc(q.en)}</small>`:""}</div>`, say:q.q,
@@ -602,10 +1154,7 @@ function startStoryQuiz(){
         reveal:q.choices[q.ok][1]
       };
     }),
-    extra:[
-      {label:"✍️ Wörter üben (Spelling)", fn:()=>startSpell("listen",storyWords(s),"stories")},
-      {label:"📖 Nochmal lesen", fn:()=>go("book",{i:STORIES.indexOf(s),reset:true})}
-    ]
+    extra
   });
 }
 
